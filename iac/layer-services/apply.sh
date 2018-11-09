@@ -33,15 +33,6 @@ if [ ! -e "$FILE" ]; then
    rm metrics-ca-config.json
 fi
 
-cd kiam
-FILE="./ca-key.pem"
-if [ ! -e "$FILE" ]; then
-  cfssl gencert -initca ca.json | cfssljson -bare ca
-  cfssl gencert -ca=ca.pem -ca-key=ca-key.pem server.json | cfssljson -bare server
-  cfssl gencert -ca=ca.pem -ca-key=ca-key.pem agent.json | cfssljson -bare agent
-fi
-cd -
-
 export ACCOUNT_ID=$(aws sts get-caller-identity | jq .Account | tr -d \")
 
 jinja2 ./templates/cluster-autoscaler.yaml > ./manifests/cluster-autoscaler.yaml
@@ -51,7 +42,6 @@ jinja2 ./templates/alert-manager-sns-forwarder.yaml > ./manifests/alert-manager-
 jinja2 ./templates/route53-externalDNS.yaml > ./manifests/route53-externalDNS.yaml
 jinja2 ./templates/traefik-svc-private.yaml > ./traefik-admin/traefik-svc.yaml
 jinja2 ./templates/traefik-svc-public.yaml > ./traefik-app/traefik-svc.yaml
-jinja2 ./aws-service-catalog/aws-service-operator.yaml > ./manifests/aws-service-operator.yaml
 
 cp ./templates/alertmanager.yaml ./kube-prometheus/alertmanager.yaml
 sed -i.bak "s/%NAME%/$NAME/g" ./kube-prometheus/alertmanager.yaml
@@ -66,5 +56,4 @@ rm ./manifests/alert-manager-sns-forwarder.yaml
 rm ./manifests/route53-externalDNS.yaml
 rm ./traefik-admin/traefik-svc.yaml
 rm ./traefik-app/traefik-svc.yaml
-rm ./manifests/aws-service-operator.yaml
 rm ./kube-prometheus/alertmanager.yaml
