@@ -1,4 +1,6 @@
-# sandbox-aws
+# kubernetes-aws
+
+![WeSpeakCloud](img/we-speak-cloud.png)
 
 This project is my AWS sandbox.
 
