@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cicd
+  namespace: {{ environ('NAME') }}
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: Role
+metadata:
+  name: cicd
+  namespace: {{ environ('NAME') }}
+rules:
+- apiGroups: [""]
+  resources:
+  - pods
+  - services
+  - endpoints
+  - pods/portforward
+  - pods/log
+  - pods/exec
+  - namespaces
+  - configmaps
+  - persistentvolumeclaims
+  verbs: ["get", "list", "watch", "create", "patch", "update", "delete"]
+- apiGroups: ["extensions"]
+  resources:
+  - replicasets
+  verbs: ["get", "list"]
+- apiGroups: ["extensions", "apps"]
+  resources:
+  - deployments
+  - ingresses
+  - statefulsets
+  verbs: ["get", "list", "watch", "create", "patch", "delete"]
+- apiGroups: ["monitoring.coreos.com"]
+  resources:
+  - servicemonitors
+  verbs: ["get", "list", "watch", "create", "patch", "delete"]
+- apiGroups: ["autoscaling"]
+  resources:
+  - horizontalpodautoscalers
+  verbs: ["get", "list", "watch", "create", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: RoleBinding
+metadata:
+  name: cicd
+  namespace: {{ environ('NAME') }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cicd
+subjects:
+- kind: ServiceAccount
+  name: cicd
+  namespace: {{ environ('NAME') }}

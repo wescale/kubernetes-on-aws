@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana-ui-ing
+  namespace: monitoring
+  annotations:
+    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+  labels:
+    traffic-type: internal
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /grafana
+        backend:
+          serviceName: grafana
+          servicePort: 3000

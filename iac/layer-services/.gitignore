@@ -1,0 +1,9 @@
+custom-metric/cm-adapter-serving-certs.yaml
+cm-adapter-serving-certs.yaml
+apiserver-key.pem
+apiserver.csr
+apiserver.pem
+metrics-ca-config.json
+metrics-ca.key
+metrics-ca.crt
+manifests/cluster-autoscaler.yaml

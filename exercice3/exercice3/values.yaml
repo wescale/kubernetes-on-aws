@@ -1,0 +1,48 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 3
+
+image:
+  repository: 549637939820.dkr.ecr.eu-west-1.amazonaws.com/webservice-test
+  tag: 0.0.2
+  pullPolicy: IfNotPresent
+  livenesspath: "/healthz"
+  readynesspath: "/ready"
+  containerport: 8080
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  annotations:
+    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+  path: /api
+  hosts:
+    - test-kubernetes.aws-wescale.slavayssiere.fr
+  tls: []
+  labels:
+    traffic-type: external
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    memory: "40Mi"
+    cpu: "20m"
+  requests:
+    memory: "40Mi"
+    cpu: "20m"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

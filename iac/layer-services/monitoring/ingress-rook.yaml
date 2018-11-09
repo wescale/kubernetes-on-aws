@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: rook-ui-ing
+  namespace: rook-ceph
+  labels:
+    traffic-type: internal
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: rook-ceph-mgr-dashboard
+          servicePort: 7000

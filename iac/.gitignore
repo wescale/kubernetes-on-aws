@@ -1,0 +1,3 @@
+layer-base/.terraform/*
+connect-aws.sh
+data.yaml

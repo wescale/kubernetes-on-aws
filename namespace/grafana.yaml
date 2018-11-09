@@ -1,0 +1,181 @@
+---
+apiVersion: v1
+data:
+  prometheus.yaml: |-
+    {
+        "datasources": [
+            {
+                "access": "proxy",
+                "etitable": false,
+                "name": "prometheus",
+                "org_id": 1,
+                "type": "prometheus",
+                "url": "http://prometheus-operated.{{ environ('NAME') }}.svc:9090",
+                "version": 1
+            }
+        ]
+    }
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: {{ environ('NAME') }}
+---
+apiVersion: v1
+data:
+  dashboards.yaml: |-
+    [
+        {
+            "folder": "",
+            "name": "0",
+            "options": {
+                "path": "/grafana-dashboard-definitions/0"
+            },
+            "org_id": 1,
+            "type": "file"
+        },
+        {
+            "folder": "temp",
+            "name": "1",
+            "options": {
+                "path": "/grafana-dashboard-definitions/1"
+            },
+            "org_id": 1,
+            "type": "file"
+        }
+    ]
+kind: ConfigMap
+metadata:
+  name: grafana-dashboards
+  namespace: {{ environ('NAME') }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: grafana-ceph-claim
+  namespace: {{ environ('NAME') }}
+  labels:
+    app: grafana
+spec:
+  storageClassName: rook-ceph-block
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  labels:
+    app: grafana
+  name: grafana
+  namespace: {{ environ('NAME') }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - image: grafana/grafana:5.3.1
+        name: grafana
+        env:
+        - name: GF_SERVER_ROOT_URL
+          value: /grafana-{{ environ('NAME') }}
+        - name: GF_INSTALL_PLUGINS
+          value: "grafana-piechart-panel"
+        ports:
+        - containerPort: 3000
+          name: http
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - mountPath: /var/lib/grafana
+          name: grafana-storage
+          readOnly: false
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: grafana-datasources
+          readOnly: false
+        - mountPath: /etc/grafana/provisioning/dashboards
+          name: grafana-dashboards
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/0
+          name: predefined-dashboard-definitions
+          readOnly: false
+        - mountPath: /grafana-dashboard-definitions/1
+          name: temp-dashboard-definitions
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+      serviceAccountName: grafana
+      volumes:
+      - emptyDir: {}
+        name: grafana-storage
+      - configMap:
+          name: grafana-datasources
+        name: grafana-datasources
+      - configMap:
+          name: grafana-dashboards
+        name: grafana-dashboards
+      - configMap:
+          name: predefined-dashboard-definitions
+        name: predefined-dashboard-definitions
+      - name: temp-dashboard-definitions
+        persistentVolumeClaim:
+          claimName: grafana-ceph-claim
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: predefined-dashboard-definitions
+  namespace: {{ environ('NAME') }}
+data:
+  test: |
+    {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+  namespace: {{ environ('NAME') }}
+spec:
+  ports:
+  - name: http
+    port: 3000
+    targetPort: http
+  selector:
+    app: grafana
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana
+  namespace: {{ environ('NAME') }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana-ui-ing
+  namespace: {{ environ('NAME') }}
+  annotations:
+    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+  labels:
+    traffic-type: external
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /grafana-{{ environ('NAME') }}
+        backend:
+          serviceName: grafana
+          servicePort: 3000
+---

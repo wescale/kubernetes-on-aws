@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kibana-ui-ing
+  namespace: monitoring
+  labels:
+    traffic-type: internal
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /_plugin/kibana
+        backend:
+          serviceName: elasticsearch-logging
+          servicePort: 443

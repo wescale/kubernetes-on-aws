@@ -1,0 +1,4 @@
+launch.sh
+clef.pem
+kube.config
+test-*

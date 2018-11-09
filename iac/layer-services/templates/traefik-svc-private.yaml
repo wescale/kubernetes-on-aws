@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-admin-ingress-service
+  namespace: kube-system
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
+    external-dns.alpha.kubernetes.io/hostname: admin-tools.{{ environ('PRIVATE_DNS_ZONE') }}
+  labels:
+    k8s-app: traefik-admin-ingress-lb
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    k8s-app: traefik-admin-ingress-lb
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: web
+    - protocol: TCP
+      port: 8080
+      name: admin
+    - protocol: TCP
+      port: 443
+      name: web-secure
+    - protocol: TCP
+      port: 8082
+      name: metrics
+    
