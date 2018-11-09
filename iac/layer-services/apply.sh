@@ -21,8 +21,6 @@ if [[ -z "${PRIVATE_DNS_ZONE}" ]]; then
   export PRIVATE_DNS_ZONE="slavayssiere.wescale"
 fi
 
-
-
 FILE="./cm-adapter-serving-certs.yaml"
 if [ ! -e "$FILE" ]; then
    echo "File $FILE does not exist."

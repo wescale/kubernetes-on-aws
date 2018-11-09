@@ -2,22 +2,19 @@
 
 ![WeSpeakCloud](img/we-speak-cloud.png)
 
-This project is my AWS sandbox.
-
-I'm using it to test Kubernetes on AWS.
-
-Some layers folders in "IaC" are used to create:
+This project is used to:
 
 - create VPC and networking
 - create & configure k8s
 - send logs to an AWS ESaaS
 - monitoring by Prometheus
+- monitoring visualisation by Grafana
 - IngressController by Traefik
-- Custom Metrics
+- Storage backend by Rook
 
 Another folder "namespace" are used to create some configurated namespace and get one kubeconfig file for CI/CD usage.
 
-And the other one is an app test: "exercice3". It's just an webservice. See "app test" below.
+And the other one is an app test: "exercice3". It's just an webservice. See "deploy app" below.
 
 ## IaC
 
@@ -57,14 +54,30 @@ You have to create:
 
 ## Create infrastructure
 
+For the first use, please change the BUCKET_TFSTATES env var in "iac/init-layers.sh".
+BUCKET_TFSTATES is the S3 Bucket use by Terraform to store is configuration
+And launch it.
+
+```language-bash
+cd iac
+./init-layers.sh
+```
+
 Please change environment variables in "./iac/create-all.sh"
 
 ```language-yaml
 export PRIVATE_DNS_ZONE="slavayssiere.wescale"
 export PUBLIC_DNS_ZONE="aws-wescale.slavayssiere.fr."
 export KOPS_STATE_STORE=s3://wescale-slavayssiere-kops
+export BUCKET_TFSTATES="wescale-slavayssiere-terraform"
 export NAME_CLUSTER=test
 ```
+
+- PRIVATE_DNS_ZONE is a Private Zone in Route53 attached to the VPC
+- PUBLIC_DNS_ZONE is a Public Zone in Route53 with SOA configured in your AWS account
+- KOPS_STATE_STORE is the S3 Bucket use by Kops to store is configuration
+- BUCKET_TFSTATES is the S3 Bucket use by Terraform to store is configuration
+- NAME_CLUSTER ... name of the cluster ?
 
 and launch:
 
