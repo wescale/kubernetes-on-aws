@@ -2,3 +2,10 @@ launch.sh
 clef.pem
 kube.config
 test-*
+iac/layer-services/kube-prometheus/alertmanager.yaml
+iac/layer-services/manifests/alert-manager-sns-forwarder.yaml
+iac/layer-services/manifests/fluentd-to-es.yaml
+iac/layer-services/manifests/kube2iam.yaml
+iac/layer-services/manifests/route53-externalDNS.yaml
+iac/layer-services/traefik-admin/traefik-svc.yaml
+iac/layer-services/traefik-app/traefik-svc.yaml
