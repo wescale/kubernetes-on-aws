@@ -14,6 +14,3 @@ receivers:
   slack_configs:
   - api_url: https://hooks.slack.com/services/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
     channel: '#wespeakcloud'
-    title: "%NAME%"
-    text: "{{ .Annotations.message }}"
-
