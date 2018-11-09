@@ -223,9 +223,9 @@ helm install --name test my-charts/exercice3 -f values.yaml --version 0.1.0
 You can see the result of previous deployment with:
 
 ```language-bash
-curl https://test-kubernetes.aws-wescale.slavayssiere.fr/api/facture
-curl https://test-kubernetes.aws-wescale.slavayssiere.fr/api/client
-curl https://test-kubernetes.aws-wescale.slavayssiere.fr/api/ips
+curl -v -k https://test-kubernetes.aws-wescale.slavayssiere.fr/api/facture
+curl -v -k https://test-kubernetes.aws-wescale.slavayssiere.fr/api/client
+curl -v -k https://test-kubernetes.aws-wescale.slavayssiere.fr/api/ips
 ...
 ```
 
