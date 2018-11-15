@@ -2,6 +2,8 @@
 
 ![WeSpeakCloud](img/we-speak-cloud.png)
 
+Please follow [this link to get the GSlide presentation](https://docs.google.com/presentation/d/1OXszkkreG-KIBo6xvoajKMrP99eeht20EoJpphiBQPc/edit?usp=sharing)
+
 This project is used to:
 
 - create VPC and networking
