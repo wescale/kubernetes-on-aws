@@ -2,7 +2,7 @@
 
 ![WeSpeakCloud](img/we-speak-cloud.png)
 
-Please follow [this link to get the GSlide presentation](https://docs.google.com/presentation/d/1OXszkkreG-KIBo6xvoajKMrP99eeht20EoJpphiBQPc/edit?usp=sharing)
+Please follow [this link to get the SpeakerDeck presentation](https://speakerdeck.com/wescale/comment-installer-son-kubernetes-en-production-sur-aws-par-sebastien-lavayssiere)
 
 This project is used to:
 
