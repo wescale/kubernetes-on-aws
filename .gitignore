@@ -9,3 +9,5 @@ iac/layer-services/manifests/kube2iam.yaml
 iac/layer-services/manifests/route53-externalDNS.yaml
 iac/layer-services/traefik-admin/traefik-svc.yaml
 iac/layer-services/traefik-app/traefik-svc.yaml
+iac/layer-services/kube-prometheus/alertmanager.yaml.bak
+exercice3/exercice3/templates/dashboard.yaml

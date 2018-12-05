@@ -46,20 +46,6 @@ sudo sed -i.bak "s/vpc_destination_variable = ip_address/vpc_destination_variabl
 sudo sed -i.bak "s/#elasticache = False/elasticache = False/g" /etc/ansible/ec2.ini
 sudo sed -i.bak "s/#rds = False/rds = False/g" /etc/ansible/ec2.ini
 
-# eks 
-
-wget https://amazon-eks.s3-us-west-2.amazonaws.com/1.10.3/2018-07-26/bin/linux/amd64/aws-iam-authenticator
-chmod +x ./aws-iam-authenticator
-sudo mv ./aws-iam-authenticator /usr/local/bin/aws-iam-authenticator
-
-echo "export PATH=/home/ec2-user/.local/bin:$PATH" >> /home/ec2-user/.bashrc
-
-# docker
-
-sudo yum install -y docker  >> /dev/null 2>&1
-sudo usermod -aG docker ec2-user  >> /dev/null 2>&1
-sudo systemctl start docker  >> /dev/null 2>&1
-
 # helm configure
 aws configure set region eu-west-1
 sudo yum install -y git >> /dev/null 2>&1
